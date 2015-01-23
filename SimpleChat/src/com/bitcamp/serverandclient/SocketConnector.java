@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Scanner;
 
 import javax.swing.plaf.SliderUI;
 
@@ -32,8 +33,21 @@ public class SocketConnector {
 
 		SocketRW sc = new SocketRW(client.getInputStream(),
 				client.getOutputStream());
-		sc.recieve();
-		sc.send("Hello from client");
+		Scanner scen = new Scanner(System.in);
+		
+		while (true) {
+			String message = sc.recieve();
+			System.out.println("Server: "+message);
+			if(message.equals("quit"))
+				break;
+			System.out.print("Client: ");
+			String userInput = scen.nextLine();
+
+			sc.send(userInput);
+			if (userInput.equals("quit")) {
+				break;
+			}
+		}
 
 		System.out.println("\nGotovo");
 		client.close();

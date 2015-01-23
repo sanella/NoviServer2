@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class Server {
 	// nesto kao adresa ili otvor gdje cekamo konekciju,
@@ -19,6 +20,7 @@ public class Server {
 
 	public static void startServer() {
 		try {
+			Scanner scen = new Scanner(System.in);
 			// socket koji ceka da se neko na njega spoji
 			ServerSocket server = new ServerSocket(port);
 			while (true) {
@@ -27,9 +29,24 @@ public class Server {
 				Socket client = server.accept();
 				SocketRW sc = new SocketRW(client.getInputStream(),
 						client.getOutputStream());
+				while(true){
+					System.out.print("Server: ");
+					
+					
+					String userInput = scen.nextLine();
 
-				sc.send("Hello from Server");
-				System.out.println(sc.recieve());
+					sc.send(userInput);
+					if(userInput.equals("quit"))
+						break;
+					String message = sc.recieve();
+					System.out.println("Client: "+message);
+					
+					if(userInput.equals("quit") || message.equals("quit")){
+						break;
+					}
+				}
+				
+				
 
 				client.close();
 				// accept vraca new Socket
